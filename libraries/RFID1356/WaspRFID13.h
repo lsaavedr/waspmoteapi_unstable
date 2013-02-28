@@ -88,7 +88,7 @@
 #define MIFARE_CMD_INCREMENT (0xC1)
 #define MIFARE_CMD_STORE (0xC2)
 
-#define RFID_RATE 115200
+#define RFID_RATE 38400
 
 #define _delay 1
 #define timeOut 1000 // 1000 = 5 seconds wating for tag

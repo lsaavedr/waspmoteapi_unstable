@@ -230,7 +230,7 @@
 /*! \def XBEE_RATE
     \brief XBee Baud Rate    
  */
-#define XBEE_RATE	115200
+#define XBEE_RATE	38400
 
 
 /*! \def SENS_ON

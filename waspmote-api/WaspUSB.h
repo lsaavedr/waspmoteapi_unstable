@@ -78,7 +78,7 @@
     \brief USB Baud Rate
     
  */
-#define USB_RATE	115200
+#define USB_RATE	38400
 
 
 
