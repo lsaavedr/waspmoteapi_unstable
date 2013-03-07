@@ -6,12 +6,12 @@
  *  it under the terms of the GNU Lesser General Public License as published by
  *  the Free Software Foundation, either version 2.1 of the License, or
  *  (at your option) any later version.
-   
+
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
-  
+
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -19,7 +19,7 @@
  *  Design:			David Gascón
  *  Implementation:	Alberto Bielsa, David Cuartielles, Marcos Yarza
  */
- 
+
 
 #ifndef __WPROGRAM_H__
   #include "WaspClasses.h"
@@ -66,7 +66,7 @@ void WaspRTC::OFF(void)
  * It reads from RTC time,date and alarms, setting the corresponding variables
  *
  * Returns nothing
- */ 
+ */
 void WaspRTC::begin()
 {
   // Powers RTC UP
@@ -131,7 +131,7 @@ void WaspRTC::setMode(uint8_t mode, uint8_t I2C_mode)
 /* resetVars() - resets variables to zero
  *
  * It resets all the used variables to default value
- */ 
+ */
 void WaspRTC::resetVars()
 {
     year = 0;
@@ -141,16 +141,16 @@ void WaspRTC::resetVars()
     minute = 0;
     second = 0;
     date = 0;
-	second_alarm1 = 0;
-	minute_alarm1 = 0;
-	hour_alarm1 = 0;
-	day_alarm1 = 0;
-	minute_alarm2 = 0;
-	hour_alarm2 = 0;
-	day_alarm2 = 0;
-	alarm1Mode = 0;
-	alarm2Mode = 0;
-	temp=0;
+    second_alarm1 = 0;
+    minute_alarm1 = 0;
+    hour_alarm1 = 0;
+    day_alarm1 = 0;
+    minute_alarm2 = 0;
+    hour_alarm2 = 0;
+    day_alarm2 = 0;
+    alarm1Mode = 0;
+    alarm2Mode = 0;
+    temp=0;
 }
 
 
@@ -161,7 +161,7 @@ void WaspRTC::resetVars()
  *
  * It returns a string containing this array
  */
-char* WaspRTC::getRTCarray() 
+char* WaspRTC::getRTCarray()
 {
   char aux[60];
   for(uint8_t i = 0; i < RTC_DATA_SIZE; i++) {
@@ -171,15 +171,15 @@ char* WaspRTC::getRTCarray()
 }
 
 
-/* getTimestamp() - returns a string containing variables related with time 
+/* getTimestamp() - returns a string containing variables related with time
  * and date.
  *
- * It returns a string containing variables related with time and date. These 
+ * It returns a string containing variables related with time and date. These
  * values are the last taken from RTC
  */
-char* WaspRTC::getTimestamp() 
+char* WaspRTC::getTimestamp()
 {
-  switch (day) 
+  switch (day)
   {
 	case 1:	sprintf (timeStamp, "%s, %02u/%02u/%02u, %02u:%02u:%02u", DAY_1, year, month, date, hour, minute, second);
 			break;
@@ -217,24 +217,24 @@ char* WaspRTC::getTimestamp()
  * It stores in corresponding variables the read values up to alarm2 values
  * and stores then in 'registersRTC' array too.
  */
-void WaspRTC::readRTC(uint8_t endAddress) 
+void WaspRTC::readRTC(uint8_t endAddress)
 {
 	uint16_t timecount = 0;
 	// ADDRESSING FROM MEMORY POSITION ZERO
 	// the address specified in the datasheet is 208 (0xD0)
-	// but i2c adressing uses the high 7 bits so it's 104    
+	// but i2c adressing uses the high 7 bits so it's 104
 	// transmit to device #104 (0x68)
 	Wire.beginTransmission(RTC_ADDRESS);
-  
+
 	Wire.send(RTC_START_ADDRESS);  // start from address zero
 	Wire.endTransmission();
-  
+
 	// START READING
-	Wire.requestFrom(RTC_ADDRESS, RTC_DATA_SIZE);  
+	Wire.requestFrom(RTC_ADDRESS, RTC_DATA_SIZE);
 
 	// slave may send less than requested
-	while(timecount <= endAddress)    
-	{ 
+	while(timecount <= endAddress)
+	{
 		if (Wire.available())
 		{
 			uint8_t c = Wire.receive(); // receive a byte as character
@@ -273,7 +273,7 @@ void WaspRTC::readRTC(uint8_t endAddress)
 			timecount++;
 		}
 	}
-	
+
 	timecount = 0;
 }
 
@@ -284,7 +284,7 @@ void WaspRTC::readRTC(uint8_t endAddress)
  * It loads the variables into 'registersRTC'
  * array and then, this array is sent to the RTC
  */
-void WaspRTC::writeRTC() 
+void WaspRTC::writeRTC()
 {
 	int timecount = 0;
 	Wire.beginTransmission(RTC_ADDRESS); // transmit to device #104 (0x4A)
@@ -315,7 +315,7 @@ void WaspRTC::writeRTC()
  * It loads these values to 'registersRTC' array
  * and then is sent to the RTC
  */
-void WaspRTC::writeRTCalarm1() 
+void WaspRTC::writeRTCalarm1()
 {
 	byte timecount = 0;
 	Wire.beginTransmission(RTC_ADDRESS); // transmit to device #104 (0x4A)
@@ -343,7 +343,7 @@ void WaspRTC::writeRTCalarm1()
  * It loads these values to 'registersRTC' array
  * and then is sent to the RTC
  */
-void WaspRTC::writeRTCalarm2() 
+void WaspRTC::writeRTCalarm2()
 {
 	byte timecount = 0;
 	Wire.beginTransmission(RTC_ADDRESS); // transmit to device #104 (0x4A)
@@ -380,8 +380,8 @@ void WaspRTC::writeRTCalarm2()
  * -->	RTC_ALM1_MODE3	2	// Hours,minutes and seconds match
  * -->	RTC_ALM1_MODE4	3	// Minutes and seconds match
  * -->	RTC_ALM1_MODE5	4	// Seconds match
- * -->	RTC_ALM1_MODE6	5	// Once per second 
- * 
+ * -->	RTC_ALM1_MODE6	5	// Once per second
+ *
  * -->	RTC_ALM2_MODE1	0	// Day,hours and minutes match
  * -->	RTC_ALM2_MODE2	1	// Date,hours and minutes match
  * -->	RTC_ALM2_MODE3	2	// Hours and minutes
@@ -393,11 +393,11 @@ void WaspRTC::configureAlarmMode (uint8_t alarmNum, uint8_t alarmMode)
 	if (alarmNum == 1)
 	{
 		// activate the INT/SQW output on alarm match
-		registersRTC[RTC_CONTROL_ADDRESS] &= B11111101; 
+		registersRTC[RTC_CONTROL_ADDRESS] &= B11111101;
 		registersRTC[RTC_CONTROL_ADDRESS] |= B00000101;
 		writeRTCregister(RTC_CONTROL_ADDRESS);
 		// reset the alarm flags
-		registersRTC[RTC_STATUS_ADDRESS] &= B11111100;  
+		registersRTC[RTC_STATUS_ADDRESS] &= B11111100;
 		writeRTCregister(RTC_STATUS_ADDRESS);
 
 		switch (alarmMode)
@@ -406,9 +406,9 @@ void WaspRTC::configureAlarmMode (uint8_t alarmNum, uint8_t alarmMode)
 			case 0:	// set A1M1 bit to 0
 					registersRTC[RTC_ALM1_SECONDS_ADDRESS] &= B01111111;
 					writeRTCregister(RTC_ALM1_SECONDS_ADDRESS);
-					
+				
 					// set A1M2 bit to 0
-					registersRTC[RTC_ALM1_MINUTES_ADDRESS] &= B01111111; 
+					registersRTC[RTC_ALM1_MINUTES_ADDRESS] &= B01111111;
 					writeRTCregister(RTC_ALM1_MINUTES_ADDRESS);
 
 					// set A1M3 bit to 0
@@ -418,30 +418,30 @@ void WaspRTC::configureAlarmMode (uint8_t alarmNum, uint8_t alarmMode)
 					// set A1M4 bit to 0
 					registersRTC[RTC_ALM1_DAYS_ADDRESS] &= B01111111;
 					// set DY/DT bit to 1
-					registersRTC[RTC_ALM1_DAYS_ADDRESS] |= B01000000; 
+					registersRTC[RTC_ALM1_DAYS_ADDRESS] |= B01000000;
 					writeRTCregister(RTC_ALM1_DAYS_ADDRESS);
 
 					break;
-			
-			// when date, hours, minutes and seconds match				
+		
+			// when date, hours, minutes and seconds match			
 			case 1: // set A1M1 bit to 0
 					registersRTC[RTC_ALM1_SECONDS_ADDRESS] &= B01111111;
 					writeRTCregister(RTC_ALM1_SECONDS_ADDRESS);
-					
+				
 					// set A1M2 bit to 0
 					registersRTC[RTC_ALM1_MINUTES_ADDRESS] &= B01111111;
 					writeRTCregister(RTC_ALM1_MINUTES_ADDRESS);
 
 					// set A1M3 bit to 0
-					registersRTC[RTC_ALM1_HOURS_ADDRESS] &= B01111111; 
+					registersRTC[RTC_ALM1_HOURS_ADDRESS] &= B01111111;
 					writeRTCregister(RTC_ALM1_HOURS_ADDRESS);
 
 					// set A1M4 bit to 0 and DY/DT to 0
-					registersRTC[RTC_ALM1_DAYS_ADDRESS] &= B00111111; 
+					registersRTC[RTC_ALM1_DAYS_ADDRESS] &= B00111111;
 					writeRTCregister(RTC_ALM1_DAYS_ADDRESS);
 
 					break;
-					
+				
 			// when hours, minutes and seconds match
 			case 2:	// set A1M1 bit to 0
 					registersRTC[RTC_ALM1_SECONDS_ADDRESS] &= B01111111;
@@ -460,7 +460,7 @@ void WaspRTC::configureAlarmMode (uint8_t alarmNum, uint8_t alarmMode)
 					writeRTCregister(RTC_ALM1_DAYS_ADDRESS);
 
 					break;
-					
+				
 			// when minutes and seconds match
 			case 3: // set A1M1 bit to 0
 					registersRTC[RTC_ALM1_SECONDS_ADDRESS] &= B01111111;
@@ -478,7 +478,7 @@ void WaspRTC::configureAlarmMode (uint8_t alarmNum, uint8_t alarmMode)
 					registersRTC[RTC_ALM1_DAYS_ADDRESS] |= B10000000;
 					writeRTCregister(RTC_ALM1_DAYS_ADDRESS);
 					break;
-			
+		
 			// when seconds match
 			case 4:	// set A1M1 bit to 0
 					registersRTC[RTC_ALM1_SECONDS_ADDRESS] &= B01111111;
@@ -489,14 +489,14 @@ void WaspRTC::configureAlarmMode (uint8_t alarmNum, uint8_t alarmMode)
 					writeRTCregister(RTC_ALM1_MINUTES_ADDRESS);
 
 					// set A1M3 bit to 1
-					registersRTC[RTC_ALM1_HOURS_ADDRESS] |= B10000000; 
+					registersRTC[RTC_ALM1_HOURS_ADDRESS] |= B10000000;
 					writeRTCregister(RTC_ALM1_HOURS_ADDRESS);
 
 					// set A1M4 bit to 1
-					registersRTC[RTC_ALM1_DAYS_ADDRESS] |= B10000000; 
+					registersRTC[RTC_ALM1_DAYS_ADDRESS] |= B10000000;
 					writeRTCregister(RTC_ALM1_DAYS_ADDRESS);
 					break;
-			
+		
 			// once per second
 			case 5:	// set A1M1 bit to 1
 					registersRTC[RTC_ALM1_SECONDS_ADDRESS] |= B10000000;
@@ -514,7 +514,7 @@ void WaspRTC::configureAlarmMode (uint8_t alarmNum, uint8_t alarmMode)
 					registersRTC[RTC_ALM1_DAYS_ADDRESS] |= B10000000;
 					writeRTCregister(RTC_ALM1_DAYS_ADDRESS);
 					break;
-			
+		
 			// alarm1 OFF
 			case 6:	// de-activate the INT/SQW output on alarm match
 					registersRTC[RTC_CONTROL_ADDRESS] &= B11111000;
@@ -543,12 +543,12 @@ void WaspRTC::configureAlarmMode (uint8_t alarmNum, uint8_t alarmMode)
 					writeRTCregister(RTC_ALM2_MINUTES_ADDRESS);
 
 					// set A2M3 bit to 0
-					registersRTC[RTC_ALM2_HOURS_ADDRESS] &= B01111111; 
+					registersRTC[RTC_ALM2_HOURS_ADDRESS] &= B01111111;
 					writeRTCregister(RTC_ALM2_HOURS_ADDRESS);
-					
+				
 					// set A2M4 bit to 0
 					registersRTC[RTC_ALM2_DAYS_ADDRESS] &= B01111111;
-					// set DY/DT bit to 1 
+					// set DY/DT bit to 1
 					registersRTC[RTC_ALM2_DAYS_ADDRESS] |= B01000000;
 					writeRTCregister(RTC_ALM2_DAYS_ADDRESS);
 					break;
@@ -563,15 +563,15 @@ void WaspRTC::configureAlarmMode (uint8_t alarmNum, uint8_t alarmMode)
 					writeRTCregister(RTC_ALM2_HOURS_ADDRESS);
 
 					// set A2M4 bit to 0 and DY/DT to 0
-					registersRTC[RTC_ALM2_DAYS_ADDRESS] &= B00111111; 
+					registersRTC[RTC_ALM2_DAYS_ADDRESS] &= B00111111;
 					writeRTCregister(RTC_ALM2_DAYS_ADDRESS);
 					break;
-			
+		
 			// when hours and minutes match
 			case 2:	// set A2M2 bit to 0
 					registersRTC[RTC_ALM2_MINUTES_ADDRESS] &= B01111111;
 					writeRTCregister(RTC_ALM2_MINUTES_ADDRESS);
-					   
+				
 					// set A2M3 bit to 0
 					registersRTC[RTC_ALM2_HOURS_ADDRESS] &= B01111111;
 					writeRTCregister(RTC_ALM2_HOURS_ADDRESS);
@@ -580,7 +580,7 @@ void WaspRTC::configureAlarmMode (uint8_t alarmNum, uint8_t alarmMode)
 					registersRTC[RTC_ALM2_DAYS_ADDRESS] |= B10000000;
 					writeRTCregister(RTC_ALM2_DAYS_ADDRESS);
 					break;
-			
+		
 			// when minutes match
 			case 3:	// set A2M2 bit to 0
 					registersRTC[RTC_ALM2_MINUTES_ADDRESS] &= B01111111;
@@ -594,10 +594,10 @@ void WaspRTC::configureAlarmMode (uint8_t alarmNum, uint8_t alarmMode)
 					registersRTC[RTC_ALM2_DAYS_ADDRESS] |= B10000000;
 					writeRTCregister(RTC_ALM2_DAYS_ADDRESS);
 					break;
-			
+		
 			// Once per minute
 			case 4:	// set A2M2 bit to 1
-					registersRTC[RTC_ALM2_MINUTES_ADDRESS] |= B10000000; 
+					registersRTC[RTC_ALM2_MINUTES_ADDRESS] |= B10000000;
 					writeRTCregister(RTC_ALM2_MINUTES_ADDRESS);
 
 					// set A2M3 bit to 1
@@ -608,7 +608,7 @@ void WaspRTC::configureAlarmMode (uint8_t alarmNum, uint8_t alarmMode)
 					registersRTC[RTC_ALM2_DAYS_ADDRESS] |= B10000000;
 					writeRTCregister(RTC_ALM2_DAYS_ADDRESS);
 					break;
-			
+		
 			// alarm 2 OFF
 			case 5:	// de-activate the INT/SQW output on alarm match
 					registersRTC[RTC_CONTROL_ADDRESS] &= B11111000;
@@ -630,12 +630,12 @@ void WaspRTC::configureAlarmMode (uint8_t alarmNum, uint8_t alarmMode)
  *
  * - FIXME: modify it to write to EEPROM
  */
-void WaspRTC::writeRTCregister(uint8_t theAddress) 
+void WaspRTC::writeRTCregister(uint8_t theAddress)
 {
 	// ADDRESSING FROM MEMORY POSITION RECEIVED AS PARAMETER
 	Wire.beginTransmission(RTC_ADDRESS); // transmit to device #104 (0x68)
 	// the address specified in the datasheet is 208 (0xD0)
-	// but i2c adressing uses the high 7 bits so it's 104    
+	// but i2c adressing uses the high 7 bits so it's 104
 	Wire.send(theAddress);  // start from address theAddress
 
 	// START SENDING
@@ -651,19 +651,19 @@ void WaspRTC::writeRTCregister(uint8_t theAddress)
  *
  * - FIXME: modify it to read from EEPROM
  */
-void WaspRTC::readRTCregister(uint8_t theAddress) 
+void WaspRTC::readRTCregister(uint8_t theAddress)
 {
 	// ADDRESSING FROM MEMORY POSITION RECEIVED AS PARAMETER
 	Wire.beginTransmission(RTC_ADDRESS); // transmit to device #104 (0x68)
 	// the address specified in the datasheet is 208 (0xD0)
-	// but i2c adressing uses the high 7 bits so it's 104    
+	// but i2c adressing uses the high 7 bits so it's 104
 	Wire.send(theAddress);  // start from address theAddress
 	Wire.endTransmission();
-  
+
 	// START READING
 	Wire.requestFrom(RTC_ADDRESS, 0x01); // transmit to device #104 (0x68)
 	// the address specified in the datasheet is 208 (0xD0)
-	// but i2c adressing uses the high 7 bits so it's 104    
+	// but i2c adressing uses the high 7 bits so it's 104
 	while(!Wire.available()) {};
 	registersRTC[theAddress] = Wire.receive();
 	Wire.endTransmission();
@@ -671,33 +671,33 @@ void WaspRTC::readRTCregister(uint8_t theAddress)
 
 
 /* dow(y,m,d) - calculate the day of the week based on the year,month and day
- * 
- * Sakamoto’s algorithm is used in this function. Valid for any date in the 
+ *
+ * Sakamoto’s algorithm is used in this function. Valid for any date in the
  * range [September 14, 1752] – [December 31, 9999]
- * 
+ *
  * Parameters
  * 	y: year
  * 	m: month (1-12)
- * 	d: day of the month (1-31). 
- * 
+ * 	d: day of the month (1-31).
+ *
  * Returns
  * 	The function returns 1 = Sunday, 2 = Monday, ..., 7 =Saturday.
  *
  */
 int WaspRTC::dow(int y, int m, int d)
-{	
-	// invalid day of month 
+{
+	// invalid day of month
 	if( (d>31)|| (d<1) )
 	{
 		return 1;
 	}
-	
-	// invalid month 
+
+	// invalid month
 	if( (m>12)||(m<1) )
 	{
 		return 1;
 	}
-	
+
     static int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
     y -= m < 3;
     return (y + y/4 - y/100 + y/400 + t[m-1] + d +1) % 7;
@@ -716,7 +716,7 @@ int WaspRTC::dow(int y, int m, int d)
 void WaspRTC::setTime(const char* time)
 {
 	uint8_t aux=0, aux2=0;
-	
+
 	aux=(uint8_t) time[0] - 48;
 	aux2=(uint8_t) time[1] - 48;
 	year = RTC.BCD2byte(aux, aux2);
@@ -751,11 +751,11 @@ void WaspRTC::setTime(const char* time)
  *
  * Each input corresponds to the relayed part of time and date.
  */
-void WaspRTC::setTime(	uint8_t _year, 
-						uint8_t _month, 
+void WaspRTC::setTime(	uint8_t _year,
+						uint8_t _month,
 						uint8_t _date,
-						uint8_t day_week, 
-						uint8_t _hour, 
+						uint8_t day_week,
+						uint8_t _hour,
 						uint8_t _minute,
 						uint8_t _second	)
 {
@@ -862,13 +862,41 @@ char* WaspRTC::getTime()
 }
 
 
+/* setTimeFromGPS() - sets time and date from the GPS to the RTC. GPS
+ * has to be initialized first and got the time/date
+ *
+ * It sets time and date from the GPS to the RTC. GPS has to be
+ * initialized first and got the time/date
+ *
+ * It returns nothing
+ */
+void WaspRTC::setTimeFromGPS()
+{
+	int day, month, year, hour, minute, second = 0;
+
+	day = (GPS.dateGPS[0]-'0')*10 + (GPS.dateGPS[1]-'0');
+
+	month = (GPS.dateGPS[2]-'0')*10 + (GPS.dateGPS[3]-'0');
+
+	year = (GPS.dateGPS[4]-'0')*10 + (GPS.dateGPS[5]-'0');
+
+	hour = (GPS.timeGPS[0]-'0')*10 + (GPS.timeGPS[1]-'0');
+
+	minute = (GPS.timeGPS[2]-'0')*10 + (GPS.timeGPS[3]-'0');
+
+	second = (GPS.timeGPS[4]-'0')*10 + (GPS.timeGPS[5]-'0');
+
+	RTC.setTime(year, month, day, 1, hour, minute, second);
+}
+
+
 /* getTemperature() - gets temperature
  *
- * It gets temperature from RTC. It reads associated registers to 
+ * It gets temperature from RTC. It reads associated registers to
  * temperature and stores the temperature in a variable called 'temp'.
- * The temperature is encoded in two's complement format. 
- * The upper 8 bits, the integer portion, are at RTC's register 11h and 
- * the lower 2 bits, the fractional portion,  are in the upper nibble at 
+ * The temperature is encoded in two's complement format.
+ * The upper 8 bits, the integer portion, are at RTC's register 11h and
+ * the lower 2 bits, the fractional portion,  are in the upper nibble at
  * register 12h.
  *
  * It returns temperature value.
@@ -878,34 +906,34 @@ float WaspRTC::getTemperature()
 	// Local variables
 	int8_t high; // store upper byte
 	uint8_t low; // store lower byte
-	int16_t aux; 
-	
-	// Read RTC temperature registers 
+	int16_t aux;
+
+	// Read RTC temperature registers
 	readRTCregister(RTC_MSB_TEMP_ADDRESS); // Upper byte
-	readRTCregister(RTC_LSB_TEMP_ADDRESS); // Lower byte	
+	readRTCregister(RTC_LSB_TEMP_ADDRESS); // Lower byte
 	high=registersRTC[RTC_MSB_TEMP_ADDRESS];
 	low=registersRTC[RTC_LSB_TEMP_ADDRESS];
-	
-	// Compose temperature value 
+
+	// Compose temperature value
 	aux=((int16_t)high<<2)+((uint16_t)low>>6);
-	  
+
 	// The temperature is encoded in two's complement format. Check sign bit:
-	if (registersRTC[RTC_MSB_TEMP_ADDRESS]>>7 == 1)	
+	if (registersRTC[RTC_MSB_TEMP_ADDRESS]>>7 == 1)
 	{
 		// Negative temperature
-		aux=~(aux); 
+		aux=~(aux);
 		aux++;
 		temp=(float)aux;
 		temp*=-1;
-		temp=temp/4; 
+		temp=temp/4;
 	}
 	else
 	{
 		// Positive temperature
 		temp=(float)aux;
-		temp=temp/4; 
+		temp=temp/4;
 	}
-    
+
 	return temp;
 }
 
@@ -940,7 +968,7 @@ void WaspRTC::setAlarm1(const char* time, uint8_t offset, uint8_t mode)
 	aux=(uint8_t) time[9] - 48;
 	aux2=(uint8_t) time[10] - 48;
 	second_alarm1 = BCD2byte(aux, aux2);
-	
+
 	if(offset==RTC_OFFSET) // add the date to the actual date
 	{
 		readRTC(RTC_DATE_ADDRESS_2);
@@ -968,7 +996,7 @@ void WaspRTC::setAlarm1(const char* time, uint8_t offset, uint8_t mode)
 			if( day_alarm1>7 ) day_alarm1-=7;
 		}
 		else
-		{	
+		{
 			day_alarm1+=date;
 			if(month==1||month==3||month==5||month==7||month==8||month==12 )
 			{
@@ -981,15 +1009,15 @@ void WaspRTC::setAlarm1(const char* time, uint8_t offset, uint8_t mode)
 			if( month==2 )
 			{
 				if( day_alarm1>28 ) day_alarm1-=28;
-			}			
+			}		
 		}
 	}
-	
+
 	RTC.writeRTCalarm1();
 	RTC.configureAlarmMode(1,mode);
 }
 
-/* setAlarm1(day_date,_hour,_minute,_second,offset,mode) 
+/* setAlarm1(day_date,_hour,_minute,_second,offset,mode)
  *
  * It sets Alarm1 to the specified time, offset and mode.
  *
@@ -1056,7 +1084,7 @@ void WaspRTC::setAlarm1(uint8_t day_date, uint8_t _hour, uint8_t _minute,
 		aux=_second/10;
 		second_alarm1 = BCD2byte(aux, aux2);
 	}
-	
+
 	if(offset==RTC_OFFSET) // add the date to the actual date
 	{
 		readRTC(RTC_DATE_ADDRESS_2);
@@ -1084,7 +1112,7 @@ void WaspRTC::setAlarm1(uint8_t day_date, uint8_t _hour, uint8_t _minute,
 			if( day_alarm1>7 ) day_alarm1-=7;
 		}
 		else
-		{	
+		{
 			day_alarm1+=date;
 			if(month==1||month==3||month==5||month==7||month==8||month==12)
 			{
@@ -1097,10 +1125,10 @@ void WaspRTC::setAlarm1(uint8_t day_date, uint8_t _hour, uint8_t _minute,
 			if( month==2 )
 			{
 				if( day_alarm1>28 ) day_alarm1-=28;
-			}			
+			}		
 		}
 	}
-	
+
 	RTC.writeRTCalarm1();
 	RTC.configureAlarmMode(1,mode);
 }
@@ -1108,7 +1136,7 @@ void WaspRTC::setAlarm1(uint8_t day_date, uint8_t _hour, uint8_t _minute,
 
 /* getAlarm1() - gets Alarm1 time
  *
- * It gets Alarm1 time from RTC. 
+ * It gets Alarm1 time from RTC.
  *
  * It returns a string containing this time and date for Alarm1
  */
@@ -1144,7 +1172,7 @@ char* WaspRTC::getAlarm1()
 void WaspRTC::setAlarm2(const char* time, uint8_t offset, uint8_t mode)
 {
 	uint8_t aux=0, aux2=0;
-	
+
 	aux=(uint8_t) time[0] - 48;
 	aux2=(uint8_t) time[1] - 48;
 	day_alarm2 = BCD2byte(aux, aux2);
@@ -1154,7 +1182,7 @@ void WaspRTC::setAlarm2(const char* time, uint8_t offset, uint8_t mode)
 	aux=(uint8_t) time[6] - 48;
 	aux2=(uint8_t) time[7] - 48;
 	minute_alarm2 = BCD2byte(aux, aux2);
-	
+
 	if(offset==RTC_OFFSET) // add the date to the actual date
 	{
 		readRTC(RTC_DATE_ADDRESS_2);
@@ -1176,7 +1204,7 @@ void WaspRTC::setAlarm2(const char* time, uint8_t offset, uint8_t mode)
 			if( day_alarm2>7 ) day_alarm2-=7;
 		}
 		else
-		{	
+		{
 			day_alarm2+=date;
 			if(month==1||month==3||month==5||month==7||month==8||month==12)
 			{
@@ -1189,10 +1217,10 @@ void WaspRTC::setAlarm2(const char* time, uint8_t offset, uint8_t mode)
 			if( month==2 )
 			{
 				if( day_alarm2>28 ) day_alarm2-=28;
-			}			
+			}		
 		}
 	}
-	
+
 	RTC.writeRTCalarm2();
 	RTC.configureAlarmMode(2,mode);
 }
@@ -1252,7 +1280,7 @@ void WaspRTC::setAlarm2(uint8_t day_date, uint8_t _hour, uint8_t _minute,
 		aux=_minute/10;
 		minute_alarm2 = BCD2byte(aux, aux2);
 	}
-	
+
 	if(offset==RTC_OFFSET) // add the date to the actual date
 	{
 		readRTC(RTC_DATE_ADDRESS_2);
@@ -1274,7 +1302,7 @@ void WaspRTC::setAlarm2(uint8_t day_date, uint8_t _hour, uint8_t _minute,
 			if( day_alarm2>7 ) day_alarm2-=7;
 		}
 		else
-		{	
+		{
 			day_alarm2+=date;
 			if(month==1||month==3||month==5||month==7||month==8||month==12)
 			{
@@ -1287,10 +1315,10 @@ void WaspRTC::setAlarm2(uint8_t day_date, uint8_t _hour, uint8_t _minute,
 			if( month==2 )
 			{
 				if( day_alarm2>28 ) day_alarm2-=28;
-			}			
+			}		
 		}
 	}
-	
+
 	RTC.writeRTCalarm2();
 	RTC.configureAlarmMode(2,mode);
 }
@@ -1298,7 +1326,7 @@ void WaspRTC::setAlarm2(uint8_t day_date, uint8_t _hour, uint8_t _minute,
 
 /* getAlarm2() - gets Alarm2 time
  *
- * It gets Alarm2 time from RTC. 
+ * It gets Alarm2 time from RTC.
  *
  * It returns a string containing this time and date for Alarm1
  */
@@ -1330,23 +1358,23 @@ void WaspRTC::clearAlarmFlag()
 
 
 /* BCD2byte ( number ) - converts a BCD number to an integer
- * 
+ *
  */
-uint8_t WaspRTC::BCD2byte(uint8_t number) 
+uint8_t WaspRTC::BCD2byte(uint8_t number)
 {
   return (number>>4)*10 | (number & 0x0F);
 }
 
 /* BCD2byte ( high, low ) - converts a BCD number to an integer
  */
-uint8_t WaspRTC::BCD2byte(uint8_t high, uint8_t low) 
+uint8_t WaspRTC::BCD2byte(uint8_t high, uint8_t low)
 {
   return high*10 + low;
 }
 
 /* byte2BCD ( number ) - converts an integer number to a BCD number
  */
-uint8_t WaspRTC::byte2BCD(uint8_t theNumber) 
+uint8_t WaspRTC::byte2BCD(uint8_t theNumber)
 {
   return (theNumber%10 | ((theNumber-theNumber%10)/10)<<4);  // note that binary operations have preference on the others
 }
