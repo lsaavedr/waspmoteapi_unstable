@@ -862,34 +862,6 @@ char* WaspRTC::getTime()
 }
 
 
-/* setTimeFromGPS() - sets time and date from the GPS to the RTC. GPS
- * has to be initialized first and got the time/date
- *
- * It sets time and date from the GPS to the RTC. GPS has to be
- * initialized first and got the time/date
- *
- * It returns nothing
- */
-void WaspRTC::setTimeFromGPS()
-{
-	int day, month, year, hour, minute, second = 0;
-
-	day = (GPS.dateGPS[0]-'0')*10 + (GPS.dateGPS[1]-'0');
-
-	month = (GPS.dateGPS[2]-'0')*10 + (GPS.dateGPS[3]-'0');
-
-	year = (GPS.dateGPS[4]-'0')*10 + (GPS.dateGPS[5]-'0');
-
-	hour = (GPS.timeGPS[0]-'0')*10 + (GPS.timeGPS[1]-'0');
-
-	minute = (GPS.timeGPS[2]-'0')*10 + (GPS.timeGPS[3]-'0');
-
-	second = (GPS.timeGPS[4]-'0')*10 + (GPS.timeGPS[5]-'0');
-
-	RTC.setTime(year, month, day, 1, hour, minute, second);
-}
-
-
 /* getTemperature() - gets temperature
  *
  * It gets temperature from RTC. It reads associated registers to
